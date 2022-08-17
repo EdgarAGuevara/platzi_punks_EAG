@@ -5,11 +5,13 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "./Base64.sol";
 import "./PlatziPunksEAGDNA.sol";
 
 contract PlatziPunksEAG is ERC721, ERC721Enumerable, PlatziPunksEAGDNA {
     using Counters for Counters.Counter;
+    using Strings for uint256;
 
     Counters.Counter private _idCounter;
     uint256 public maxSupply;
@@ -25,6 +27,7 @@ contract PlatziPunksEAG is ERC721, ERC721Enumerable, PlatziPunksEAGDNA {
 
         tokenDNA[current] = deterministicPseudoRandomDNA(current, msg.sender);
         _safeMint(msg.sender, current);
+        _idCounter.increment();
     }
 
     function _baseURI() internal pure override returns (string memory) {
@@ -93,8 +96,8 @@ contract PlatziPunksEAG is ERC721, ERC721Enumerable, PlatziPunksEAGDNA {
         string memory jsonURI = Base64.encode(
             abi.encodePacked(
                 '{"name": "PlatziPunksEAG #',
-                tokenId,
-                '", "description":"Platzi Punks EAG is a NFT based on course of platzy called DAPPS Introduction to developing DAPPS","image":"',
+                tokenId.toString(),
+                '",  "description":"Platzi Punks EAG is a NFT based on course of platzy called DAPPS Introduction to developing DAPPS","image":"',
                 image,
                 '"}'
             )
